@@ -1,0 +1,50 @@
+---
+title: "Simple recursive calculations of Fibonacci numbers"
+author: "Keith McNulty"
+date: "08/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In [this article](https://medium.com/cantors-paradise/two-fascinating-properties-of-the-fibonacci-sequence-8cf0f66aca95) I proved that for any $n, m > 2$, the following holds true for Fibonacci numbers $F_n$:
+
+$$
+F_{n + m} = F_mF_{n+1} + F_{m-1}F_n
+$$
+
+Now we can easily write a recursive function to calculate an arbitrarily large Fibonacci number based on knowing the first few numbers:
+
+```{r}
+
+fibonacci <- function(x) {
+  f <- c(1, 1, 2, 3, 5)
+  if (x <= 5) {
+    f[x]
+  } else {
+    n <- ceiling(x/2)
+    m <- floor(x/2)
+    fibonacci(m)*fibonacci(n+1) + fibonacci(m-1)*fibonacci(n)
+  }
+}
+
+```
+
+Let's test it, doing our best to display very large numbers in R:
+
+```{r, message = FALSE, warning = FALSE}
+library(gmp)
+fibonacci(30)
+as.bigz(fibonacci(1000))
+as.bigz(fibonacci(10000))
+```
+
+We can also test that the rule of the Fibonacci sequence hold for very large $n$:
+
+```{r}
+fibonacci(1000) + fibonacci(1001) == fibonacci(1002)
+fibonacci(10000) + fibonacci(10001) == fibonacci(10002)
+```
+
